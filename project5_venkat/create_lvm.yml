@@ -1,0 +1,46 @@
+---
+- name: create lvm
+  hosts: all
+  remote_user: venkat
+  become: yes
+  tasks:
+    - name: Create a new primary partition for LVM
+      parted:
+        device: /dev/vdb
+        number: 1
+        flags: [ lvm ]
+        state: present
+        part_end: 800MiB # MB--> 1000KB , MiB --> 1024KiB
+      when: inventory_hostname in groups['prod']
+#   Create LVM --> create a vg and then create lv
+    - name: Create a volume group on top of /dev/vdb1 with physical extent size = 4MB is default
+      lvg:
+        vg: prod_vg
+        pvs: /dev/vdb1
+      when: ansible_devices.vdb.partitions.vdb1 is defined
+    - name: Create a logical volume 500m
+      lvol:
+        vg: prod_vg
+        lv: vol1
+        size: 500m
+      when: ansible_lvm.vgs.prod_vg is defined and ansible_lvm.vgs.prod_vg.free_g > '500'
+    - name: write fs
+      filesystem:
+        dev: /dev/prod_vg/despair1
+        fstype: ext4
+      when: ansible_lvm.vgs.prod_vg is defined
+    - name: create a mount point
+      file:
+        path: /mnt/vol1
+        state: directory
+      when: inventory_hostname in groups['prod']
+    - name: To mount
+      mount:
+        path: /mnt/vol1
+        src: /dev/prod_vg/despair1
+        fstype: ext4
+        state: mounted
+      when: inventory_hostname in groups['prod']
+
+     
+      

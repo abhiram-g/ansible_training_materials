@@ -1,0 +1,16 @@
+---
+- name: Use Multi Roles
+  hosts: all
+  remote_user: venkat
+  become: yes
+  tasks:
+    - name: use balancer role
+      include_role:
+        name: balancer
+      when: inventory_hostname in groups['balancers']
+    - name: use phpinfo role
+      include_role:
+        name: phpinfo
+      when: inventory_hostname in groups['prod']
+
+

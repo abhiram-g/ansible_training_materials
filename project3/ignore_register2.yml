@@ -1,0 +1,24 @@
+---
+- name: using register and ignore_errors
+  hosts: all
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: access file 
+      stat:
+        path: /etc/passwd1
+      register: res
+      ignore_errors: yes
+
+    - name: Can access
+      debug: 
+        msg: Can access
+      when: res.stat.exists == true
+
+    - name: Can't access
+      debug: 
+        msg: Can't access
+      when: res.stat.exists == false
+      
+
+...

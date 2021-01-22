@@ -1,0 +1,18 @@
+all:
+  children:
+    balancers:
+      hosts:
+        serverd:
+    dev:
+      hosts:
+        servera:
+    test:
+      hosts:
+        serverb:
+    ungrouped: {}
+    webservers:
+      children:
+        prod:
+          hosts:
+            serverb: {}
+            serverc:

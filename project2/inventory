@@ -1,0 +1,20 @@
+serverf
+
+[dev]
+servera
+
+[test]
+serverb pkg=postfix
+
+[prod]
+serverb
+serverc
+
+[balancer]
+serverd
+
+[webserver:children]
+prod
+
+[test:vars]
+pkg=php

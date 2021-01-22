@@ -1,0 +1,25 @@
+---
+- name: Adding line 
+  hosts: all
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: adding a line
+      lineinfile:
+        path: /tmp/users.txt
+        line: This line was added by Abhiram
+        create: yes
+
+    - name: restricting root access
+      lineinfile: 
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: PermitRootLogin no
+      when: inventory_hostname == 'serverf'
+
+    - name: restard sshd
+      service:
+        name: sshd
+        state: restarted
+      when: inventory_hostname == 'serverf'
+...

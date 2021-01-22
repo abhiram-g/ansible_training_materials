@@ -1,0 +1,23 @@
+---
+- name: If file exists, prevent modification
+  hosts: servera
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Check if file exists
+      stat:
+        path: /etc/saveabort.txt
+      register: res
+
+    - name: If file exists, prevent modification
+      file: 
+        path: /etc/saveabort.txt
+        owner: abhi
+        group: root
+        mode: 0444
+
+      when: res.stat.exists == true
+      
+
+
+...

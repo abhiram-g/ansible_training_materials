@@ -1,0 +1,22 @@
+---
+- name: Tags to create ping.txt
+  hosts: all
+  remote_user: abhi
+  become: yes
+  tasks: 
+    - name: Tag1 script
+      copy:
+        dest: /tmp/tag1.html
+        content: I am Tag1, by Abhi
+       # create: yes
+      tags: tag1
+      when: inventory_hostname == 'servera' or inventory_hostname == 'serverc'
+    
+    - name: Tag2 script
+      copy:
+        dest: /tmp/tag2.html
+        content: I am Tag2, by Abhi
+        #create: yes
+      tags: tag2
+      when: inventory_hostname == 'serverb' or inventory_hostname == 'serverd'
+...

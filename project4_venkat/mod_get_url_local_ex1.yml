@@ -1,0 +1,42 @@
+---
+- name: Delagate_to verification
+  hosts: prod
+  remote_user: venkat
+  become: yes
+  tasks:
+    - name: yum module verification
+      yum:
+        name:
+          - httpd
+          - php
+          - mariadb-server
+          - firewalld
+        state: latest
+    - name: Start and enable service
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - httpd
+        - mariadb
+    - name: Allow traffic for web
+      firewalld:
+        service: http
+        state: enabled
+        immediate: yes
+        permanent: yes
+    - name: Download index.html.j2 from remote to control node
+      get_url:
+        url: http://content.example.com/files/index.html.j2
+        dest: /tmp/
+      delegate_to: localhost
+      become: false
+    - name: create a home page using by downloading
+      template:
+        dest: /var/www/html/index.html
+        src: /tmp/index.html.j2
+
+
+
+

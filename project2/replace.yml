@@ -1,0 +1,12 @@
+---
+- name: Replace module
+  hosts:  servera
+  remote_user: abhi
+  become: yes
+  tasks: 
+    - name: replace
+      replace:
+        path: /tmp/multi.txt
+        regexp: 'server'
+        replace: 'my server'
+...

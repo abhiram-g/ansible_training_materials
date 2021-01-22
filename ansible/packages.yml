@@ -1,0 +1,32 @@
+---
+- name: To install php and mariadb packages
+  hosts: dev, test, prod
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Install PHP
+      yum:
+        name: php
+        state: latest
+
+    - name: Install mariadb
+      yum:
+        name: 
+          - mariadb
+          - mariadb-server
+        state: latest
+
+- name: Install RPM development tools and update all packages
+  hosts: dev
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Install RPM dev tools
+      yum:
+        name: "@Development tools"
+        state: present
+    - name: Update all packages
+      yum:
+        name: '*'
+        state: latest
+...

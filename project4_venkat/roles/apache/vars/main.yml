@@ -1,0 +1,16 @@
+---
+# vars file for roles/apache
+apache_webserver_pkg: httpd
+apache_firewall_pkg: firewalld
+apache_webserver_srv: httpd
+apache_firewall_srv: firewalld
+apache_firewall_rule: http
+
+#pkg:
+#  - httpd
+#  - firewalld
+#srv:
+#  - httpd
+#  - firewalld
+#rule: http
+

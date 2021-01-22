@@ -1,0 +1,11 @@
+---
+- name: install packages
+  hosts: test
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Install {{pkg}} packages
+      yum:
+        name: "{{ pkg }}"
+        state: present
+...

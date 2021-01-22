@@ -1,0 +1,35 @@
+---
+- name: To check failed installation and service
+  hosts: servera
+  remote_user: abhi
+  become: yes
+  tasks:
+    - block:
+      - name: Try installing dummy
+        yum:
+          name: dummy 
+          state: present
+        register: install_res
+      rescue:
+      - name: Failed installation
+        debug:
+          msg: "Installation failed!"
+
+    - block:
+      - name: Try starting service
+        service: 
+          name: dummy
+          state: started
+        register: service_res
+      rescue: 
+      - name: Starting service failed
+        debug: 
+          msg: "Starting service failed!"
+
+    - name: Check if play is successful
+      debug: 
+        msg: "Playbook was unsuccessful!"
+      when: install_res.failed == true or service_res.failed == true
+
+
+...

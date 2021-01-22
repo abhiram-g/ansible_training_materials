@@ -1,0 +1,28 @@
+---
+- name: Create users
+  hosts: all
+  remote_user: venkat
+  become: yes
+#  vars:
+#    venkat1_pass: mypass1
+#    venkat2_pass: mypass2
+  vars_files:
+    - mypass.yml
+  tasks:
+    - name: Create a group
+      group:
+        name: testvenkatgrp
+        state: present
+    - name: create a user
+      user:
+        name: testvenkat1
+        comment: user1
+        password: "{{ venkat1_pass | password_hash('sha512') }}"
+        groups: testvenkatgrp
+    - name: create a user2
+      user:
+        name: testvenkat2
+        comment: user2
+        password: "{{ venkat2_pass | password_hash('sha512') }}"
+        groups: testvenkatgrp
+

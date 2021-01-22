@@ -1,0 +1,37 @@
+---
+- name: using register and ignore_errors
+  hosts: serverb 
+  remote_user: abhi
+  become: yes
+  tasks:
+    - block: 
+      - name: Install package
+        yum:
+          name: pkg
+          state: present
+        register: install
+        ignore_errors: yes
+      - name: Start service
+        service:
+          name: myserv
+          state: started
+        register: serv
+        
+      rescue:
+      - name: Install error
+        debug: 
+          msg: Can't install
+        when: install.failed == true
+      - name: service error
+        debug:
+          msg: Can't start service     
+        when: serv.failed == true
+      - debug:
+          msg: Playbook failed to run
+        when: install.failed == true or serv.failed == true
+      always:
+      - name: Runs always 
+        debug:
+          msg: Rus anyways
+
+...

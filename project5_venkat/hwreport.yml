@@ -1,0 +1,51 @@
+---
+- name: hwreport
+  hosts: all
+  remote_user: venkat
+  become: yes
+  tasks:
+    - name: Download hwreport.empty
+      get_url:
+        url: http://content.example.com/files/hwreport.empty
+        dest: /root/hwreport_venkat.txt
+        force: yes
+    - name: replace inventory name
+      replace:
+        path: /root/hwreport_venkat.txt
+        regexp: 'inventoryhostname'
+        replace: "{{ inventory_hostname }}"
+    - name: replace memory
+      replace:
+        path: /root/hwreport_venkat.txt
+        regexp: 'total_memory'
+        replace: "{{ ansible_memtotal_mb }}"
+    - name: replace bios version
+      replace:
+        path: /root/hwreport_venkat.txt
+        regexp: 'bios_version'
+        replace: "{{ ansible_bios_version }}"
+    - name: replace vda size if exists
+      replace:
+        path: /root/hwreport_venkat.txt
+        regexp: 'ansible_vda_size'
+        replace: "{{ ansible_devices.vda.size }}"
+      when: ansible_devices.vda is defined
+    - name: replace vdc size if exists
+      replace:
+        path: /root/hwreport_venkat.txt
+        regexp: 'ansible_vdb_size'
+        replace: "{{ ansible_devices.vdc.size }}"
+      when: ansible_devices.vdc is defined
+    - name: replace vda size with none if doesn't exists
+      replace:
+        path: /root/hwreport_venkat.txt
+        regexp: 'ansible_vda_size'
+        replace: "NONE"
+      when: ansible_devices.vda is not defined
+    - name: replace vdc size with none if doesn't exists
+      replace:
+        path: /root/hwreport_venkat.txt
+        regexp: 'ansible_vdb_size'
+        replace: "NONE"
+      when: ansible_devices.vdc is not defined
+

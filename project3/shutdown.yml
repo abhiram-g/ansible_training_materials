@@ -1,0 +1,12 @@
+---
+- name: Shutting down httpd
+  hosts: prod
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Shutdown httpd in serverb
+      service: 
+        name: httpd
+        state: stopped
+  
+...

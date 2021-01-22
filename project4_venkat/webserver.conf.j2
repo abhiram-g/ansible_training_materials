@@ -1,0 +1,13 @@
+{# To Configure Web Server Custom Config File  #}
+{# Default Config File --> /etc/httpd/conf/httpd.conf  #}
+{# Custom Config File --> /etc/httpd/conf.d/webserver.conf  #}
+<VirtualHost {{ ansible_default_ipv4.address }}:80>
+ServerName {{ ansible_fqdn }}
+DocumentRoot /var/www/cisco
+DirectoryIndex index.html
+</VirtualHost>
+<Directory "/var/www/cisco">
+    AllowOverride None
+    Options None
+    Require all granted
+</Directory>

@@ -1,0 +1,19 @@
+---
+- name: Delagate_to verification
+  hosts: prod
+  remote_user: venkat
+  become: yes
+  tasks:
+    - name: yum module verification
+      yum:
+        name:
+          - httpd
+          - php
+          - php-mydql
+          - mariadb-server
+          - firewalld
+        state: latest
+
+
+
+

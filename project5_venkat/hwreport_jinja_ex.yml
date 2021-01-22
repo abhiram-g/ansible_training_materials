@@ -1,0 +1,10 @@
+---
+- name: hwreport Jinja
+  hosts: all
+  remote_user: venkat
+  become: yes
+  tasks:
+    - name: Process template
+      template:
+        dest: /root/hwreport_venkat_j2.txt
+        src: hwreport.j2

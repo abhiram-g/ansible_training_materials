@@ -1,0 +1,15 @@
+---
+- name: sample play to create and delete files
+  hosts: all 
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: delete old inventory file
+      file:
+        path: /var/tmp/inventory_abhi
+        state: absent
+    - name: create new inventory file
+      file:
+        path: /var/tmp/new_inventory_abhi
+        state: touch     
+...

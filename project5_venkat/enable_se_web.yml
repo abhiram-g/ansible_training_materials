@@ -1,0 +1,56 @@
+---
+- name: Create a playbook to install and configure httpd
+  hosts: dev
+  remote_user: venkat
+  become: yes
+  tasks:
+    - name: Enable SELinux
+      selinux:
+        policy: targeted
+        state: enforcing
+    - name: reboot to apply selinux in enforcing
+      reboot:
+    - name: install httpd
+      yum: 
+        name:
+          - httpd
+          - firewalld
+        state: latest
+    - name: start and enable service
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop: 
+        - httpd
+        - firewalld
+    - name: Allow traffic in firewall
+      firewalld:
+        service: http
+        state: enabled
+        immediate: yes
+        permanent: yes
+    - name: create a Webpage in diffent documentroot
+      file:
+        path: /cisco
+        state: directory
+        setype: httpd_sys_content_t
+    - name: Create a page
+      copy:
+        dest: /cisco/index.html
+        content: Website is accessible from different docroot
+        setype: httpd_sys_content_t
+      notify: restart httpd
+    - name: create a link
+      file:
+        src: /cisco
+        dest: /var/www/html/cisco
+        state: link
+        force: yes
+  handlers:
+    - name: restart httpd
+      service:
+        name: httpd
+        state: restarted
+
+

@@ -1,0 +1,49 @@
+---
+- name: To configure webserver
+  hosts: production
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: install latest version of Apache
+      yum:
+        name: httpd
+        state: latest
+    - name: Start httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+    - name: Allow http traffic in firewall
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+        immediate: yes
+    - name: Create a home page
+      copy:
+        content: "Created from playbook"
+        dest: /var/www/html/index.html
+
+- name: To configure database server
+  hosts: database
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: install latest version of MariaDB
+      yum:
+        name:
+          - mariadb
+          - mariadb-server
+        state: latest
+    - name: start mariadb service
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+    - name: Allow http traffic in firewall
+      firewalld:
+        service: mysql
+        permanent: yes
+        state: enabled
+        immediate: yes
+...

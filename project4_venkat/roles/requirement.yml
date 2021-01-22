@@ -1,0 +1,5 @@
+---
+- src: http://content.example.com/files/haproxy.tar.gz
+  name: balancer
+- src: http://content.example.com/files/info.tar.gz
+  name: phpinfo

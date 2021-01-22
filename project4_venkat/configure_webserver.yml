@@ -1,0 +1,26 @@
+---
+- name: config
+  hosts: prod
+  remote_user: venkat
+  become: yes
+  tasks:
+    - name: create a document root
+      file:
+        path: /var/www/cisco
+        state: directory
+    - name: create a Home page
+      copy:
+        dest: /var/www/cisco/index.html
+        content: Created using Jinja Template
+    - name: create a custom config file
+      template:
+        src: webserver.conf.j2
+        dest: /etc/httpd/conf.d/webserver.conf
+      notify: restart httpd
+  handlers:
+    - name: restart httpd
+      service:
+        name: httpd
+        state: restarted
+      
+      

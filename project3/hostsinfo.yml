@@ -1,0 +1,11 @@
+---
+- name: Writing hostsinfo into a file
+  hosts: all
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Write the info using template
+      template: 
+        dest: /root/hostinfo.txt
+        src: jinja_hostinfo.j2
+...

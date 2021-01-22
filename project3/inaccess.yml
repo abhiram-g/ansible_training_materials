@@ -1,0 +1,22 @@
+---
+- name: Inaccess yml
+  hosts: servera
+  remote_user: abhi
+  become:  yes
+  tasks:
+    - block:
+      - name: Copy url to html file
+        get_url:
+          url: http://content.example.com/access.html
+          dest: /var/www/html/access.html
+        # register: res
+      rescue:
+        - name: If failed, create file
+          lineinfile:
+            path: /var/www/html/access.html
+            line: "I have no access"
+            create: yes
+
+
+        
+...

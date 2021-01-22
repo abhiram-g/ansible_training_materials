@@ -1,0 +1,16 @@
+---
+- name: Create hosts file
+  hosts: all 
+  remote_user: abhi
+  become: yes
+  
+  tasks:
+    - name: Check facts
+      debug:
+        msg: "{{ hostvars[inventory_hostname] }}"
+    - name: Create file
+      template:
+        src: hosts.j2
+        dest: /etc/abhi_hosts
+      when: inventory_hostname in groups['dev']
+...

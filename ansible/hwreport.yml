@@ -1,0 +1,67 @@
+---
+- name: hwreport template download
+  hosts: all
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: download template
+      get_url:
+        url: http://content.example.com/files/
+        dest: /root/hwreport_abhi.txt
+        force: yes
+    - name: Replace host content
+      replace: 
+        path: /root/hwreport_abhi.txt
+        regexp: 'inventoryhostname'
+        replace: "{{ inventory_hostname }}"
+    - name: Replace host content
+      replace:
+        path: /root/hwreport_abhi.txt
+        regexp: 'total_memory'
+        replace: "{{ ansible_memtotal_mb }}"
+    - name: Replace host content
+      replace:
+        path: /root/hwreport_abhi.txt
+        regexp: 'bios_version'
+        replace: "{{ ansible_bios_version }}"
+    - name: Replace host content
+      replace:
+        path: /root/hwreport_abhi.txt
+        regexp: 'ansible_vda_size'
+        replace: "{{ ansible_devices.vda.size }}"
+      when: ansible_devices.vda.size is defined 
+    - name: Replace host content
+      replace:
+        path: /root/hwreport_abhi.txt
+        regexp: 'ansible_vda_size'
+        replace: None
+      when: ansible_devices.vda.size is not defined
+#    - name: Replace host content
+#      replace:
+#        path: /root/hwreport_abhi.txt
+#        regexp: 'ansible_vdb_size'
+#        replace: "{{ ansible_devices.vdb.size }}"
+#      when: ansible_devices.vdb.size is defined
+#    - name: Replace host content
+#      replace:
+#        path: /root/hwreport_abhi.txt
+#        regexp: 'ansible_vdb_size'
+#        replace: None
+#      when: ansible_devices.vdb.size is not defined    
+    - name: Replace host content
+      replace:
+        path: /root/hwreport_abhi.txt
+        regexp: 'VDB_SIZE'
+        replace: "{{ ansible_devices.vdc.size }}"
+      when: ansible_devices.vdc.size is defined
+    - name: Replace host content
+      replace:
+        path: /root/hwreport_abhi.txt
+        regexp: "VDB_SIZE"
+        replace: "None"
+      when: ansible_devices.vdc.size is not defined
+
+
+  
+        
+...

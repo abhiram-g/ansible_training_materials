@@ -1,0 +1,43 @@
+---
+- name: hwreport template download
+  hosts: all
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Create new primary partition for LVM
+      parted:
+        device: /dev/vdb
+        number: 1
+        flags: [ lvm ]
+        state: present
+        part_end: 800MiB
+      when: inventory_hostname in groups['prod']
+
+    - name: Create volume group on top of  /dev/vdb1
+      lvg: 
+        vg: prod_vg
+        pvs: /dev/vdb1
+      when: ansible_devices.vdb.partitions.vdb1 is defined
+    - name: Create logical volume 
+      lvol:
+        vg: prod_vg
+        lv: vol1
+        size: 2200m
+      when: ansible_lvm.vgs.prod_vg is defined and ansible_lvm.vgs.prod_vg.free_g > '500'
+    - name: write fs
+      filesystem:
+        dev: /dev/prod_vg/despair1
+        fstype: ext4
+      when: ansible_lvm.vgs.prod_vg is defined
+    - name: Create mount point
+      file:
+        path: /mnt/vol1
+        state: directory
+      when: inventory_hostname in groups['prod']
+    - name: To mount
+      mount: 
+        path: /mnt/vol1
+        src: /dev/prod_vg/despair1
+        state: present
+        fstype: ext4
+... 

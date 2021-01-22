@@ -1,0 +1,16 @@
+---
+- name: To write using blockinfile
+  hosts: test
+  become: yes
+  tasks:
+    - name: Writing file
+      blockinfile:
+        path: /tmp/myAbhi.txt
+        block: |
+             Ansible
+             Idempotent
+             Agentless
+             Free
+             Opensource
+        create: yes
+...

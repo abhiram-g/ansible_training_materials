@@ -1,0 +1,31 @@
+---
+# tasks file for roles/apache
+- name: Install {{ apache_webserver_pkg }}
+  yum:
+    name: "{{ apache_webserver_pkg }}"
+    state: latest
+- name: install {{ apache_firewall_pkg }}
+  yum:
+    name: "{{ apache_firewall_pkg }}"
+    state: latest
+- name: Start and enable {{ apache_webserver_srv }} service
+  service:
+    name: "{{ apache_webserver_srv }}"
+    state: started
+    enabled: yes
+- name: Start and enable {{ apache_firewall_srv }} service
+  service:      
+    name: "{{ apache_firewall_srv }}"
+    state: started
+    enabled: yes
+- name: Allow {{ apache_firewall_rule }} in firewall
+  firewalld:
+    service: "{{ apache_firewall_rule }}"
+    state: enabled
+    immediate: yes
+    permanent: yes
+- name: Create a home page
+  template:
+    src: index.html.j2
+    dest: /var/www/cisco/index.html
+  notify: restart httpd

@@ -1,0 +1,33 @@
+---
+- name: Writing file /etc/issue in dev instances
+  hosts: dev
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Writing dev files
+      copy:
+        content: "Development"
+        dest: /etc/issue
+
+- name: Writing file /etc/issue in test instances
+  hosts: test
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Writing test file
+      copy:
+        content: "Test"
+        dest: /etc/issue
+
+- name: Writing file /etc/issue in production instances
+  hosts: prod
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Writing prod files
+      copy:
+        content: "Production"
+        dest: /etc/issue
+
+     
+...  

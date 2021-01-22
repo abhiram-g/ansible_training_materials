@@ -1,0 +1,7 @@
+---
+- name: using apache role
+  hosts: prod
+  remote_user: venkat
+  become: yes
+  roles:
+    - apache

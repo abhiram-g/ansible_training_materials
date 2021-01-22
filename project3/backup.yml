@@ -1,0 +1,17 @@
+---
+- name: tar ball based on tag
+  hosts: all
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Tar in prod group
+      command: tar -czvf /var/tmp/prod_abhi.tar.gz /var/www/html/
+      tags: prod
+      when: inventory_hostname in groups['prod']
+
+    - name: Tar in dev group
+      command: tar -czvf /var/tmp/devops_abhi.tar.gz /var/log/audit
+      tags: dev
+      when: inventory_hostname in groups['dev']
+        
+...

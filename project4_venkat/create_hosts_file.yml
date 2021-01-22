@@ -1,0 +1,11 @@
+---
+- name: Generate hosts file
+  hosts: all
+  remote_user: venkat
+  become: yes
+  tasks:
+    - name: Process Jinja Template to create hosts file
+      template:
+        src: hosts.j2
+        dest: /tmp/venkat_hosts
+      when: inventory_hostname in groups['dev']

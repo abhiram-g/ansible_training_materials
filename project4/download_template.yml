@@ -1,0 +1,13 @@
+---
+- name: Download template online
+  hosts: servera
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Download
+      get_url:
+        url: http://content.example.com/files/hosts.j2
+        dest: /tmp/
+      delegate_to: localhost
+      
+...

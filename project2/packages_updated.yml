@@ -1,0 +1,15 @@
+---
+- name: install packages
+  hosts: test
+  vars_files:
+    var_file.yml
+  vars:
+    pkg: mariadb
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Install {{pkg}} packages
+      yum:
+        name: "{{ pkg }}"
+        state: present
+...

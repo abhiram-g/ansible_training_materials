@@ -1,0 +1,13 @@
+---
+- name: Start httpd
+  hosts: prod
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: Start httpd in serverb
+      service: 
+        name: httpd
+        state: started
+        enabled: yes
+  
+...

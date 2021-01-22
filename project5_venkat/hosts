@@ -1,0 +1,19 @@
+[dev]
+servera
+
+[test]
+serverb
+
+[prod]
+serverb pkg=httpd
+serverc pkg=vsftpd
+
+[balancers]
+serverd pkg=haproxy
+
+[webservers:children]
+prod
+
+[dev:vars]
+pkg=samba
+

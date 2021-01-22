@@ -1,0 +1,19 @@
+---
+- name: using block and rescue
+  hosts: all
+  remote_user: abhi
+  become: yes
+  tasks:
+    - block: 
+      - name: Open file
+        uri:
+          url: http://www.google.com
+      rescue:
+      - name: Failed
+        debug: 
+          msg: Can't access
+      always:
+      - name: Runs always
+        debug: 
+          msg: Run anyways
+...

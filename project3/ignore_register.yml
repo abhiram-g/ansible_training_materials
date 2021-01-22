@@ -1,0 +1,23 @@
+---
+- name: using register and ignore_errors
+  hosts: all
+  remote_user: abhi
+  become: yes
+  tasks:
+    - name: access server
+      uri:
+        url: http://www.google2.com
+      register: res
+      ignore_errors: yes
+
+    - name: Can access
+      debug: 
+        msg: "{{ res.url}}"
+      when: res.status == 200
+
+    - name: Can't access
+      debug: 
+        msg: "Can't access. {{ res.status }}"
+      when: res.status != 200
+
+...

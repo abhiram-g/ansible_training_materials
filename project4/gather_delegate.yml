@@ -1,0 +1,44 @@
+---
+- name: Check delegate
+  hosts: prod
+  remote_user: abhi
+  become:  yes
+  tasks:
+    - name: Install packages
+      yum:
+        name: 
+          - httpd
+          - php
+          - mariadb-server
+          - firewalld
+        state: latest
+
+    - name: Enable and start services
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - firewalld
+        - httpd
+        - mariadb
+ 
+    - name: Allow http ports using firewalld
+      firewalld:
+        service: http
+        state: enabled
+        permanent: yes
+
+    - name: Writing index.html
+      get_url:
+        dest: /tmp/ex_ind.html.j2
+        url: http://content.example.com/files/index.html.j2
+        force: yes
+      delegate_to: localhost
+      become: false
+    - name: create a home page using by downloading
+      template:
+        dest: /var/www/html/index.html
+        src: /tmp/ex_ind.html.j2
+
+...

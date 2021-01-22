@@ -1,0 +1,36 @@
+---
+- name: pkg verification
+  hosts: prod
+  remote_user: abhi
+  become: yes
+  gather_facts: True
+  tasks:
+    - name: yum module verification
+      yum:
+        name:
+          - httpd
+          - php
+          - mariadb-server
+          - firewalld
+        state: latest
+    - name: Start and enable service
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - httpd
+        - mariadb
+    - name: Allow traffic for web
+      firewalld:
+        service: http
+        state: enabled
+        immediate: yes
+        permanent: yes
+    - name: create a home page using copy module
+      copy:
+        dest: /var/www/html/index.html
+        content: Gathered Facts
+
+
+

@@ -1,0 +1,15 @@
+---
+- name: Create a playbook to install and configure httpd
+  hosts: dev
+  remote_user: venkat
+  become: yes
+  tasks:
+    - name: Disable SELinux
+      selinux:
+        state: disabled
+    - name: reboot immediately
+      reboot:
+    - name: install httpd
+      yum: 
+        name: httpd
+        state: latest
